@@ -9,6 +9,8 @@ $('#div-chat').hide();
 socket.on('DANH_SACH', arrUser =>{
 	
 	console.log(arrUser);
+
+ playStream('localStream', stream);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
             $('#ulUser').append(`<div class="participant-item">
