@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>test demoC</title>
+        <script src="jquery.js"></script>
+		<script src="socket.io.js"></script>
+		<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body { font: 13px Helvetica, Arial; }
+			form { padding: 3px;  bottom: 0; width: 100%; }
+			form input { border: 2; padding: 10px; width: 80%; margin-right: .5%; }
+			form button { width: 19%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+			#messages { list-style-type: none; margin: 0; padding: 0; }
+			#messages li { padding: 5px 10px; }
+			#messages li:nth-child(odd) { background: #eee; }
+			
+			.chat-button {
+  position: fixed;
+  bottom: 55px;
+  right: 20px;
+  background-color: #0084ff;
+  color: #fff;
+  border-radius: 50px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.chat-button:hover {
+  background-color: #0072d9;
+}
+
+.chat-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  position: relative;
+}
+
+.chat-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+.chat-dot:nth-child(2) {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.chat-dot:nth-child(3) {
+  right: 6px;
+  left: auto;
+}
+
+.chat-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.chat-box {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: height 1s ease;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* CSS Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Main Container */
+
+    /* Video Call Box */
+    .video-call-box {
+      width: 100%;
+      max-width: 800px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    /* Video Container */
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 5px;
+      padding: 5px;
+    }
+
+    /* Video Frame */
+    .video-frame {
+      width: 100%;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background-color: #f2f2f2;
+    }
+
+    /* Participants List */
+    .participants-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      background-color: #f2f2f2;
+    }
+
+    /* Participant Item */
+    .participant-item {
+      display: flex;
+      align-items: center;
+      margin: 8px;
+    }
+
+    /* Participant Avatar */
+    .participant-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+    }
+
+    /* Participant Name */
+    .participant-name {
+      margin-left: 8px;
+    }
+	@media (max-width: 767px) {
+  #div-chat {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+		 </style>
+    </head>
+    <body>
+		<div id="div-chat">
+            <h3 id="my-peer" style="display:none;"></h3>
+			<!--
+            <br /><br />
+            <video id="remoteStream" width="300" controls></video>
+			-->
+            <input type="text" id="remoteId" placeholder="Remote ID" style="display:none;">
+            <button id="btnCall" style="display:none;">Call</button>
+			
+			<div class="chat-button" onclick="toggleChat()">
+			  <div class="chat-icon">
+				<span class="chat-dot"></span>
+				<span class="chat-dot"></span>
+				<span class="chat-dot"></span>
+			  </div>
+			  <span class="chat-text">Chat</span>
+			</div>
+			<div class="chat-box" id="chatBox">
+			  <ul id="messages"></ul>
+					<form id="chat-form">
+					  <input id="chat-input" autocomplete="off" /><button id="send_msg">Send</button>
+					</form>
+			</div>
+			
+		<div class="container">
+			<div class="video-call-box">
+			  <div class="video-container" id="remote_video">
+				<video class="video-frame" id="localStream" controls></video>
+			  </div>
+			  <div class="participants-list" id="ulUser">
+			  </div>
+			</div>
+		</div>
+			
+        </div>
+		<div id="div-dang-ky">
+		  <div class="container">
+			<div class="row justify-content-center">
+			  <div class="col-md-6">
+				<h2 class="text-center">Enter your name</h2>
+		
+				  <div class="form-group">
+					<label for="username">Name :</label>
+					<input type="text" class="form-control" id="txtUsername" placeholder="Enter username">
+				  </div>
+				  <button id="btnSignUp" class="btn btn-primary">Login</button>
+			
+			  </div>
+			</div>
+		  </div>
+		</div>
+        
+
+    </body>
+    <script src="main.js"></script>
+</html>
