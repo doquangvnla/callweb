@@ -110,11 +110,12 @@ peer.on('open', function(id) {
 			alert('Connect socket fail!!');
 			return;
 		}
-		socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
+		
 		
 		str.then(stream => {
 			$('#div-chat').show();
 			$('#div-dang-ky').hide();
+			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
 			//playStream('localStream', stream);
 		}).catch(err => {
 			$('#div-chat').hide();
