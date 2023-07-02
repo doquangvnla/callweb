@@ -115,7 +115,7 @@ peer.on('open', function(id) {
 		str.then(stream => {
 			$('#div-chat').show();
 			$('#div-dang-ky').hide();
-			playStream('localStream', stream);
+			//playStream('localStream', stream);
 		}).catch(err => {
 			$('#div-chat').hide();
 			$('#div-dang-ky').show();
