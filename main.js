@@ -1,6 +1,6 @@
 //const socket = io('http://localhost:3000');
 //const socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] });
-const socket = io('https://socketio-xksy.onrender.com');
+const socket = io('https://socketio-xksy.onrender.com', { transports: ['websocket', 'polling', 'flashsocket'] });
 const str = openStream();
 
 $('#div-chat').hide();
