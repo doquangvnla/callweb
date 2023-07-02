@@ -79,7 +79,7 @@ socket.on('chat message', (msg) => {
 socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 function openStream() {
-    const config = { audio: true, video: true };
+    const config = { audio: true, video: false };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
