@@ -223,7 +223,7 @@
 		<div class="container">
 			<div class="video-call-box">
 			  <div class="video-container" id="remote_video">
-					<audio class="video-frame" id="localStream" playsinline muted autoplay ></audio>
+					<audio class="video-frame" id="localStream" playsinline muted autoplay></audio>
 			  </div>
 			  <div class="participants-list" id="ulUser">
 			  </div>
