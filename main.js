@@ -54,7 +54,7 @@ socket.on('DANH_SACH', arrUser =>{
 			if (checkadmin === "admin"){
 			//them video cho nguoi moi
 				$('#remote_video').append(`<div class="audio-controls">
-													<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>
+													<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>
 													<div class="control-buttons">
 														<button class="mute-audio-button">
 														<span class="button-label">${ten}</span>
@@ -63,7 +63,7 @@ socket.on('DANH_SACH', arrUser =>{
 													</div>
 												</div>`);
 			}else{
-				$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>`);
+				$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>`);
 			}
     		}
     });
@@ -79,7 +79,7 @@ socket.on('DANH_SACH', arrUser =>{
 		if (checkadmin === "admin"){
 		//them video cho nguoi moi
 			$('#remote_video').append(`<div class="audio-controls">
-												<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>
+												<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>
 												<div class="control-buttons">
 													<button class="mute-audio-button">
 													<span class="button-label">${ten}</span>
@@ -88,7 +88,7 @@ socket.on('DANH_SACH', arrUser =>{
 												</div>
 											</div>`);
 		}else{
-			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>`);
+			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>`);
 		}
 		
 		

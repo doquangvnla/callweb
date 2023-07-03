@@ -200,7 +200,7 @@
             <h3 id="my-peer" style="display:none;"></h3>
 			<!--
             <br /><br />
-            <audio id="remoteStream" width="300" controls></audio>
+            <video id="remoteStream" width="300" controls></video>
 			-->
             <input type="text" id="remoteId" placeholder="Remote ID" style="display:none;">
             <button id="btnCall" style="display:none;">Call</button>
@@ -223,7 +223,7 @@
 		<div class="container">
 			<div class="video-call-box">
 			  <div class="video-container" id="remote_video">
-					<audio class="video-frame" id="localStream" playsinline muted autoplay></audio>
+					<video class="video-frame" id="localStream" autoplay></video>
 			  </div>
 			  <div class="participants-list" id="ulUser">
 			  </div>

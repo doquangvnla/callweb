@@ -149,6 +149,8 @@ function playStream(idVideoTag, stream) {
 	if(video != undefined && video.srcObject == null){
 	    video.srcObject = stream;
         //video.play();
+		video.setAttribute("autoplay", true);
+		video.setAttribute("playsinline", true);
 	}
     
 }
