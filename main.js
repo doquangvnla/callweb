@@ -5,6 +5,33 @@ const str = openStream();
 
 $('#div-chat').hide();
 
+var peer = new Peer();
+
+peer.on('open', function(id) {
+	$('#my-peer').append(id);
+	
+	
+	$('#btnSignUp').click(() => {
+		const username = $('#txtUsername').val();
+		if(socket.connected == false){
+			alert('Connect socket fail, wait for few second...');
+			return;
+		}
+		
+		str.then(stream => {
+			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
+			$('#div-chat').show();
+			$('#div-dang-ky').hide();
+			//playStream('localStream', stream);
+		}).catch(err => {
+			$('#div-chat').hide();
+			$('#div-dang-ky').show();
+			alert('permission denied!!')
+		});;
+	});
+  });
+  
+socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 socket.on('DANH_SACH', arrUser =>{
 	
@@ -98,35 +125,7 @@ function playStream(idVideoTag, stream) {
 openStream()
 .then(stream => playStream('localStream', stream));
 
-var peer = new Peer();
 
-peer.on('open', function(id) {
-	$('#my-peer').append(id);
-	
-	
-	$('#btnSignUp').click(() => {
-		const username = $('#txtUsername').val();
-		if(socket.connected == false){
-			alert('Connect socket fail, wait for few second...');
-			return;
-		}
-		socket.on('DANG_KY_THAT_BAT', () => {
-			alert('Vui long chon username khac!');
-			return;
-		});
-		
-		str.then(stream => {
-			$('#div-chat').show();
-			$('#div-dang-ky').hide();
-			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
-			//playStream('localStream', stream);
-		}).catch(err => {
-			$('#div-chat').hide();
-			$('#div-dang-ky').show();
-			alert('permission denied!!')
-		});;
-	});
-  });
   
   
 //Caller
