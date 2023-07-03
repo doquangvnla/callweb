@@ -19,7 +19,7 @@ socket.on('DANH_SACH', arrUser =>{
     		//them video nguoi den truoc
     		var id = $('#my-peer').html();
     		if(id != peerId){
-    			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" controls></video>`);
+    			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
     		}
     });
 	
@@ -32,7 +32,7 @@ socket.on('DANH_SACH', arrUser =>{
         </div>`);
 		
 		//them video cho nguoi moi
-        $('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" controls></video>`);
+        $('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
 		
 		//goi voi nguoi moi vao
 		
@@ -79,7 +79,7 @@ socket.on('chat message', (msg) => {
 socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 function openStream() {
-    const config = { audio: true, video: true };
+    const config = { audio: true };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
