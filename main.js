@@ -41,7 +41,7 @@ socket.on('DANH_SACH', arrUser =>{
 	console.log(arrUser);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
-            $('#ulUser').append(`<div class="participant-item">
+            $('#ulUser').append(`<div class="participant-item" id="${peerId}">
               <div class="participant-avatar"></div>
               <div class="participant-name">${ten}</div>
             </div>`);
@@ -137,7 +137,7 @@ socket.on('chat message', (msg) => {
 
 
 function openStream() {
-    const config = { audio: true };
+    const config = { audio: true , video: true };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
@@ -148,7 +148,7 @@ function playStream(idVideoTag, stream) {
 	}
 	if(video != undefined && video.srcObject == null){
 	    video.srcObject = stream;
-        video.play();
+        //video.play();
 	}
     
 }

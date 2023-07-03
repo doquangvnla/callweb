@@ -41,7 +41,7 @@ socket.on('DANH_SACH', arrUser =>{
 	console.log(arrUser);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
-            $('#ulUser').append(`<div class="participant-item">
+            $('#ulUser').append(`<div class="participant-item" id="${peerId}">
               <div class="participant-avatar"></div>
               <div class="participant-name">${ten}</div>
             </div>`);
@@ -54,7 +54,7 @@ socket.on('DANH_SACH', arrUser =>{
 			if (checkadmin === "admin"){
 			//them video cho nguoi moi
 				$('#remote_video').append(`<div class="audio-controls">
-													<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>
+													<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>
 													<div class="control-buttons">
 														<button class="mute-audio-button">
 														<span class="button-label">${ten}</span>
@@ -63,7 +63,7 @@ socket.on('DANH_SACH', arrUser =>{
 													</div>
 												</div>`);
 			}else{
-				$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>`);
+				$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>`);
 			}
     		}
     });
@@ -79,7 +79,7 @@ socket.on('DANH_SACH', arrUser =>{
 		if (checkadmin === "admin"){
 		//them video cho nguoi moi
 			$('#remote_video').append(`<div class="audio-controls">
-												<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>
+												<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>
 												<div class="control-buttons">
 													<button class="mute-audio-button">
 													<span class="button-label">${ten}</span>
@@ -88,7 +88,7 @@ socket.on('DANH_SACH', arrUser =>{
 												</div>
 											</div>`);
 		}else{
-			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>`);
+			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></video>`);
 		}
 		
 		
@@ -137,7 +137,7 @@ socket.on('chat message', (msg) => {
 
 
 function openStream() {
-    const config = { audio: true };
+    const config = { audio: true , };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
@@ -148,7 +148,7 @@ function playStream(idVideoTag, stream) {
 	}
 	if(video != undefined && video.srcObject == null){
 	    video.srcObject = stream;
-        video.play();
+        //video.play();
 	}
     
 }
