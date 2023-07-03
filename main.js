@@ -13,6 +13,7 @@ peer.on('open', function(id) {
 	
 	$('#btnSignUp').click(() => {
 		const username = $('#txtUsername').val();
+		checkadmin = username;
 		if(socket.connected == false){
 			alert('Connect socket fail, wait for few second...');
 			return;
@@ -48,7 +49,22 @@ socket.on('DANH_SACH', arrUser =>{
     		//them video nguoi den truoc
     		var id = $('#my-peer').html();
     		if(id != peerId){
-    			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+				
+    		//neu la admin
+			if (checkadmin === "admin"){
+			//them video cho nguoi moi
+				$('#remote_video').append(`<div class="audio-controls">
+													<audio class="video-frame" id="remoteStream${peerId}" controls></audio>
+													<div class="control-buttons">
+														<button class="mute-audio-button">
+														<span class="button-label">${ten}</span>
+														Tắt âm thanh</button>
+														<button class="mute-microphone-button">Tắt micro</button>
+													</div>
+												</div>`);
+			}else{
+				$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+			}
     		}
     });
 	
@@ -59,9 +75,22 @@ socket.on('DANH_SACH', arrUser =>{
           <div class="participant-avatar"></div>
           <div class="participant-name">${ten}</div>
         </div>`);
-		
+		//neu la admin
+		if (checkadmin === "admin"){
 		//them video cho nguoi moi
-        $('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+			$('#remote_video').append(`<div class="audio-controls">
+												<audio class="video-frame" id="remoteStream${peerId}" controls></audio>
+												<div class="control-buttons">
+													<button class="mute-audio-button">
+													<span class="button-label">${ten}</span>
+													Tắt âm thanh</button>
+													<button class="mute-microphone-button">Tắt micro</button>
+												</div>
+											</div>`);
+		}else{
+			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+		}
+		
 		
 		//goi voi nguoi moi vao
 		
@@ -162,6 +191,7 @@ $('#ulUser').on('click', 'li', function() {
     });
 });
 
+var checkadmin;
 //chat
 $('#send_msg').on('click', function(event) {
 	event.preventDefault();

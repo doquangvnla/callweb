@@ -20,6 +20,36 @@
 			#messages li { padding: 5px 10px; }
 			#messages li:nth-child(odd) { background: #eee; }
 			
+			.audio-controls {
+			  position: relative;
+			}
+
+			.control-buttons {
+			  position: absolute;
+			  bottom: 0;
+			  left: 0;
+			  width: 100%;
+			  display: flex;
+			  justify-content: center;
+			  background-color: rgba(0, 0, 0, 0.5);
+			  padding: 10px;
+			}
+
+			.control-buttons button {
+			  margin: 0 5px;
+			  padding: 5px 10px;
+			  color: white;
+			  background-color: #333;
+			  border: none;
+			  border-radius: 5px;
+			  cursor: pointer;
+			}
+			
+			.button-label {
+  margin-right: 5px;
+}
+
+			
 			.chat-button {
   position: fixed;
   bottom: 55px;
@@ -193,7 +223,7 @@
 		<div class="container">
 			<div class="video-call-box">
 			  <div class="video-container" id="remote_video">
-				<audio class="video-frame" id="localStream" controls></audio>
+					<audio class="video-frame" id="localStream" controls></audio>
 			  </div>
 			  <div class="participants-list" id="ulUser">
 			  </div>
