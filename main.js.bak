@@ -5,9 +5,39 @@ const str = openStream();
 
 $('#div-chat').hide();
 
+var peer = new Peer();
+
+peer.on('open', function(id) {
+	$('#my-peer').append(id);
+	
+	
+	$('#btnSignUp').click(() => {
+		const username = $('#txtUsername').val();
+		checkadmin = username;
+		if(socket.connected == false){
+			alert('Connect socket fail, wait for few second...');
+			return;
+		}
+		
+		
+		str.then(stream => {
+			
+			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
+			
+			//playStream('localStream', stream);
+		}).catch(err => {
+			$('#div-chat').hide();
+			$('#div-dang-ky').show();
+			alert('permission denied!!')
+		});;
+	});
+  });
+  
+socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 socket.on('DANH_SACH', arrUser =>{
-	
+	$('#div-chat').show();
+	$('#div-dang-ky').hide();
 	console.log(arrUser);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
@@ -19,7 +49,22 @@ socket.on('DANH_SACH', arrUser =>{
     		//them video nguoi den truoc
     		var id = $('#my-peer').html();
     		if(id != peerId){
-    			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" controls></video>`);
+				
+    		//neu la admin
+			if (checkadmin === "admin"){
+			//them video cho nguoi moi
+				$('#remote_video').append(`<div class="audio-controls">
+													<audio class="video-frame" id="remoteStream${peerId}" controls></audio>
+													<div class="control-buttons">
+														<button class="mute-audio-button">
+														<span class="button-label">${ten}</span>
+														Tắt âm thanh</button>
+														<button class="mute-microphone-button">Tắt micro</button>
+													</div>
+												</div>`);
+			}else{
+				$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+			}
     		}
     });
 	
@@ -30,9 +75,22 @@ socket.on('DANH_SACH', arrUser =>{
           <div class="participant-avatar"></div>
           <div class="participant-name">${ten}</div>
         </div>`);
-		
+		//neu la admin
+		if (checkadmin === "admin"){
 		//them video cho nguoi moi
-        $('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" controls></video>`);
+			$('#remote_video').append(`<div class="audio-controls">
+												<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>
+												<div class="control-buttons">
+													<button class="mute-audio-button">
+													<span class="button-label">${ten}</span>
+													Tắt âm thanh</button>
+													<button class="mute-microphone-button">Tắt micro</button>
+												</div>
+											</div>`);
+		}else{
+			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>`);
+		}
+		
 		
 		//goi voi nguoi moi vao
 		
@@ -76,10 +134,10 @@ socket.on('chat message', (msg) => {
 });
 
 
-socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
+
 
 function openStream() {
-    const config = { audio: true, video: true };
+    const config = { audio: true };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
@@ -98,31 +156,7 @@ function playStream(idVideoTag, stream) {
 openStream()
 .then(stream => playStream('localStream', stream));
 
-var peer = new Peer();
 
-peer.on('open', function(id) {
-	$('#my-peer').append(id);
-	
-	
-	$('#btnSignUp').click(() => {
-		const username = $('#txtUsername').val();
-		if(socket.connected == false){
-			alert('Connect socket fail!!');
-			return;
-		}
-		socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
-		
-		str.then(stream => {
-			$('#div-chat').show();
-			$('#div-dang-ky').hide();
-			//playStream('localStream', stream);
-		}).catch(err => {
-			$('#div-chat').hide();
-			$('#div-dang-ky').show();
-			alert('permission denied!!')
-		});;
-	});
-  });
   
   
 //Caller
@@ -157,6 +191,7 @@ $('#ulUser').on('click', 'li', function() {
     });
 });
 
+var checkadmin;
 //chat
 $('#send_msg').on('click', function(event) {
 	event.preventDefault();

@@ -54,7 +54,7 @@ socket.on('DANH_SACH', arrUser =>{
 			if (checkadmin === "admin"){
 			//them video cho nguoi moi
 				$('#remote_video').append(`<div class="audio-controls">
-													<audio class="video-frame" id="remoteStream${peerId}" controls></audio>
+													<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>
 													<div class="control-buttons">
 														<button class="mute-audio-button">
 														<span class="button-label">${ten}</span>
@@ -63,7 +63,7 @@ socket.on('DANH_SACH', arrUser =>{
 													</div>
 												</div>`);
 			}else{
-				$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+				$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>`);
 			}
     		}
     });
@@ -79,7 +79,7 @@ socket.on('DANH_SACH', arrUser =>{
 		if (checkadmin === "admin"){
 		//them video cho nguoi moi
 			$('#remote_video').append(`<div class="audio-controls">
-												<audio class="video-frame" id="remoteStream${peerId}" controls></audio>
+												<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>
 												<div class="control-buttons">
 													<button class="mute-audio-button">
 													<span class="button-label">${ten}</span>
@@ -88,7 +88,7 @@ socket.on('DANH_SACH', arrUser =>{
 												</div>
 											</div>`);
 		}else{
-			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" controls></audio>`);
+			$('#remote_video').append(`<audio class="video-frame" id="remoteStream${peerId}" playsinline muted autoplay></audio>`);
 		}
 		
 		
@@ -148,7 +148,6 @@ function playStream(idVideoTag, stream) {
 	}
 	if(video != undefined && video.srcObject == null){
 	    video.srcObject = stream;
-video.setAttribute('playsinline', 'true');
         video.play();
 	}
     
