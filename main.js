@@ -76,7 +76,7 @@ socket.on('chat message', (msg) => {
 });
 
 
-socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
+
 
 function openStream() {
     const config = { audio: true };
@@ -107,10 +107,13 @@ peer.on('open', function(id) {
 	$('#btnSignUp').click(() => {
 		const username = $('#txtUsername').val();
 		if(socket.connected == false){
-			alert('Connect socket fail!!');
+			alert('Connect socket fail, wait for few second...');
 			return;
 		}
-		
+		socket.on('DANG_KY_THAT_BAT', () => {
+			alert('Vui long chon username khac!');
+			return;
+		});
 		
 		str.then(stream => {
 			$('#div-chat').show();
