@@ -18,10 +18,11 @@ peer.on('open', function(id) {
 			return;
 		}
 		
+		
 		str.then(stream => {
+			
 			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
-			$('#div-chat').show();
-			$('#div-dang-ky').hide();
+			
 			//playStream('localStream', stream);
 		}).catch(err => {
 			$('#div-chat').hide();
@@ -34,7 +35,8 @@ peer.on('open', function(id) {
 socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 socket.on('DANH_SACH', arrUser =>{
-	
+	$('#div-chat').show();
+	$('#div-dang-ky').hide();
 	console.log(arrUser);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
