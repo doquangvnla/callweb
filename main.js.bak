@@ -137,7 +137,7 @@ socket.on('chat message', (msg) => {
 
 
 function openStream() {
-    const config = { audio: true , };
+    const config = { audio: true , video: true };
     return navigator.mediaDevices.getUserMedia(config);
 }
 
