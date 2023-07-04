@@ -1,7 +1,9 @@
 //const socket = io('http://localhost:3000');
-const socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] });
-//const socket = io('https://socketio-xksy.onrender.com', { transports: ['websocket', 'polling', 'flashsocket'] });
+//const socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] });
+const socket = io('https://socketio-xksy.onrender.com', { transports: ['websocket', 'polling', 'flashsocket'] });
 const str = openStream();
+var countSMS = 0;
+var togger = false;
 
 $('#div-chat').hide();
 
@@ -112,6 +114,14 @@ socket.on('chat message', (msg) => {
 	li.appendChild(li_ten);
 	li.appendChild(li_chu);
 	messages.appendChild(li);
+	
+	if(togger == false){
+		countSMS=countSMS+1;
+	}else{
+		countSMS=0;
+	}
+	
+	$('#count_chat').html(countSMS);
 });
 
 function checkAdmin(ten, peerId){
@@ -214,12 +224,21 @@ $('#send_msg').on('click', function(event) {
 });
 
 function toggleChat() {
-  var chatBox = document.getElementById("chatBox");
-if (chatBox.style.display === "none" || chatBox.style.display == "") {
-    chatBox.style.display = "flex";
-  } else {
-    chatBox.style.display = "none";
-  }
+	var chatBox = document.getElementById("chatBox");
+	if (chatBox.style.display === "none" || chatBox.style.display == "") {
+		chatBox.style.display = "flex";
+		togger = true;
+		countSMS=0;
+		
+	} else {
+		chatBox.style.display = "none";
+		togger = false;
+	}
+	
+	$('#count_chat').html(countSMS);
+	if(countSMS == 0){
+		$('#count_chat').hide();
+	}
 }
 
 function toggleMute(peerid) {
