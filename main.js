@@ -1,6 +1,6 @@
 //const socket = io('http://localhost:3000');
-//const socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] });
-const socket = io('https://socketio-xksy.onrender.com', { transports: ['websocket', 'polling', 'flashsocket'] });
+const socket = io('http://localhost:3000', { transports: ['websocket', 'polling', 'flashsocket'] });
+//const socket = io('https://socketio-xksy.onrender.com', { transports: ['websocket', 'polling', 'flashsocket'] });
 const str = openStream();
 
 $('#div-chat').hide();
@@ -14,11 +14,11 @@ peer.on('open', function(id) {
 	const username1 = $('#txtUsername').val();
 	//them video local
 	$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px; height: 50%" id="div${id}">
-									<h2>Local</h2>
-									<video id="${id}" playsinline autoplay muted></video>
+									<h3 id="localname">Local</h3>
+									<audio id="${id}" playsinline autoplay muted></audio>
 									<div class="control-buttons">
-									  <button id="muteButton${id}" class="btn btn-secondary active" onclick="toggleMute()"><i class="fas fa-microphone"></i> Mute</button>
-									  <button id="muteSpeakerButton${id}" class="btn btn-secondary active" onclick="toggleMuteSpeaker()"><i class="fas fa-volume-up"></i> Speaker</button>
+									  <button id="muteButton${id}" class="btn btn-secondary active" onclick="toggleMute('${id}')"><i class="fas fa-microphone"></i> Mute</button>
+									  <button id="muteSpeakerButton${id}" class="btn btn-secondary active" onclick="toggleMuteSpeaker('${id}')"><i class="fas fa-volume-up"></i> Speaker</button>
 									</div>
 								  </div>`);
 	openStream()
@@ -28,13 +28,19 @@ peer.on('open', function(id) {
 		const username = $('#txtUsername').val();
 		checkadmin = username;
 		if(socket.connected == false){
-			alert('Connect socket fail, wait for few second...');
-			return;
+			//alert('Connect socket fail, wait for few second...');
+			var loadingOverlay = document.querySelector(".loading-overlay");
+  
+			// Hi?n th? ph?n loading khi dang d?i?t n?i
+			loadingOverlay.style.display = "flex";
+			
 		}
 		
 		
 		str.then(stream => {
 			socket.emit('NGUOI_DUNG',{ten : username, peerId : id});
+			//in Name
+			document.getElementById("localname").innerHTML = username;
 			//playStream('localStream', stream);
 		}).catch(err => {
 			$('#div-chat').hide();
@@ -47,6 +53,10 @@ peer.on('open', function(id) {
 socket.on('DANG_KY_THAT_BAT', () => alert('Vui long chon username khac!'));
 
 socket.on('DANH_SACH', arrUser =>{
+	var loadingOverlay = document.querySelector(".loading-overlay");
+  
+			// Hi?n th? ph?n loading khi dang d?i?t n?i
+	loadingOverlay.style.display = "none";
 	$('#div-chat').show();
 	$('#div-dang-ky').hide();
 	console.log(arrUser);
@@ -109,17 +119,17 @@ function checkAdmin(ten, peerId){
 	if (checkadmin === "admin"){
 	//them video cho nguoi moi
 		$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px; height: 50%" id="div${peerId}">
-									<h2>${ten}</h2>
-									<video id="${peerId}" playsinline autoplay></video>
+									<h3>${ten}</h3>
+									<audio id="${peerId}" playsinline autoplay></audio>
 									<div class="control-buttons">
-									  <button id="muteButton${peerId}" class="btn btn-secondary active" onclick="toggleMute()"><i class="fas fa-microphone"></i> Mute</button>
-									  <button id="muteSpeakerButton${peerId}" class="btn btn-secondary active" onclick="toggleMuteSpeaker()"><i class="fas fa-volume-up"></i> Speaker</button>
+									  <button id="muteButton${peerId}" class="btn btn-secondary active" onclick="toggleMute('${peerId}')"><i class="fas fa-microphone"></i> Mute</button>
+									  <button id="muteSpeakerButton${peerId}" class="btn btn-secondary active" onclick="toggleMuteSpeaker('${peerId}')"><i class="fas fa-volume-up"></i> Speaker</button>
 									</div>
 								  </div>`);
 	}else{
 		$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px;" id="div${peerId}">
-									<h2>${ten}</h2>
-									<video id="${peerId}" playsinline autoplay></video>
+									<h3>${ten}</h3>
+									<audio id="${peerId}" playsinline autoplay></audio>
 								  </div>`);
 		
 	}
@@ -135,7 +145,7 @@ function checkAdmin(ten, peerId){
 
 
 function openStream() {
-    const config = { audio: true , video: true };
+    const config = { audio: true};
     return navigator.mediaDevices.getUserMedia(config);
 }
 
@@ -211,3 +221,59 @@ if (chatBox.style.display === "none" || chatBox.style.display == "") {
     chatBox.style.display = "none";
   }
 }
+
+function toggleMute(peerid) {
+      var muteButton = document.getElementById("muteButton"+peerid);
+      muteButton.classList.toggle("active");
+
+      if (muteButton.classList.contains("active")) {
+        muteButton.innerHTML = '<i class="fas fa-microphone"></i> Mute';
+		socket.emit('onvoice', peerid);
+      } else {
+        muteButton.innerHTML = '<i class="fas fa-microphone-slash"></i> Mute';
+		socket.emit('offvoice', peerid);
+	  }
+	}
+	function toggleMuteSpeaker(peerid) {
+      var muteSpeakerButton = document.getElementById("muteSpeakerButton"+ peerid);
+	  muteSpeakerButton.classList.toggle("active");
+
+      if (muteSpeakerButton.classList.contains("active")) {
+        muteSpeakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Speaker';
+		socket.emit('onaudio', peerid);
+      } else {
+        muteSpeakerButton.innerHTML = '<i class="fas fa-volume-mute"></i> Speaker';
+		socket.emit('offaudio', peerid);
+	  }
+	}
+	
+function offmic(peerid){
+	document.getElementById(peerid).pause();
+}
+function onmic(peerid){
+	document.getElementById(peerid).play();
+}
+
+socket.on('offvoice', (peerid) => {
+	offmic(peerid);
+});
+socket.on('onvoice', (peerid) => {
+	onmic(peerid);
+});
+
+socket.on('offaudio', (peerid) => {
+	var audioElements = document.getElementsByTagName("audio");
+    for (var i = 0; i < audioElements.length; i++) {
+        if (peerid !== audioElements[i].id){
+			document.getElementById(audioElements[i].id).pause();
+		}
+    }
+});
+socket.on('onaudio', (peerid) => {
+	var audioElements = document.getElementsByTagName("audio");
+    for (var i = 0; i < audioElements.length; i++) {
+        if (peerid !== audioElements[i].id){
+			document.getElementById(audioElements[i].id).play();
+		}
+    }
+});

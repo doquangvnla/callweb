@@ -1,133 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>test demoC</title>
-        <script src="jquery.js"></script>
-		<script src="socket.io.js"></script>
-		<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
-		
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-		
-		<style>
-			* { margin: 0; padding: 0; box-sizing: border-box; }
-			body { font: 13px Helvetica, Arial; }
-			form { padding: 3px;  bottom: 0; width: 100%; }
-			form input { border: 2; padding: 10px; width: 80%; margin-right: .5%; }
-			form button { width: 19%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-			#messages { list-style-type: none; margin: 0; padding: 0; }
-			#messages li { padding: 5px 10px; }
-			#messages li:nth-child(odd) { background: #eee; }
-			
-			.audio-controls {
-			  position: relative;
-			}
-
-			.control-buttons {
-			  position: absolute;
-			  bottom: 0;
-			  left: 0;
-			  width: 100%;
-			  display: flex;
-			  justify-content: center;
-			  background-color: rgba(0, 0, 0, 0.5);
-			  padding: 10px;
-			}
-
-			.control-buttons button {
-			  margin: 0 5px;
-			  padding: 5px 10px;
-			  color: white;
-			  background-color: #333;
-			  border: none;
-			  border-radius: 5px;
-			  cursor: pointer;
-			}
-			
-			.button-label {
-  margin-right: 5px;
-}
-
-			
-			.chat-button {
-  position: fixed;
-  bottom: 55px;
-  right: 20px;
-  background-color: #0084ff;
-  color: #fff;
-  border-radius: 50px;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
-}
-
-.chat-button:hover {
-  background-color: #0072d9;
-}
-
-.chat-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  position: relative;
-}
-
-.chat-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 6px;
-  left: 6px;
-}
-
-.chat-dot:nth-child(2) {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.chat-dot:nth-child(3) {
-  right: 6px;
-  left: auto;
-}
-
-.chat-text {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.chat-box {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 300px;
-  height: 400px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  transition: height 1s ease;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* CSS Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Call Chat</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+	body { font: 13px Helvetica, Arial; }
+	form { padding: 3px;  bottom: 0; width: 100%; }
+	form input { border: 2; padding: 10px; width: 80%; margin-right: .5%; }
+	form button { width: 19%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+	#messages { list-style-type: none; margin: 0; padding: 0; }
+	#messages li { padding: 5px 10px; }
+	#messages li:nth-child(odd) { background: #eee; }
+    .container {
+      margin-top: 10px;
     }
 
-    /* Main Container */
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-    /* Video Call Box */
-    .video-call-box {
+    h2 {
+      margin-top: 5px;
+    }
+
+    video {
+      width: 100%;
+      height: 50%;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+
+
+    .control-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .control-buttons button {
+      margin: 0 5px;
+    }
+
+    .active {
+      border: 2px solid #007bff;
+    }
+	
+	.video-call-box {
       width: 100%;
       max-width: 800px;
       background-color: #fff;
@@ -135,77 +63,114 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
+	
+	.chat-button {
+	  position: fixed;
+	  bottom: 55px;
+	  right: 20px;
+	  background-color: #0084ff;
+	  color: #fff;
+	  border-radius: 50px;
+	  padding: 10px 20px;
+	  display: flex;
+	  align-items: center;
+	  cursor: pointer;
+	  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	  transition: background-color 0.3s ease;
+	  z-index: 9999;
+	  
+	}
 
-    /* Video Container */
-    .video-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: 5px;
-      padding: 5px;
-    }
+	.chat-button:hover {
+	  background-color: #0072d9;
+	}
 
-    /* Video Frame */
-    .video-frame {
+	.chat-icon {
+	  width: 20px;
+	  height: 20px;
+	  margin-right: 10px;
+	  position: relative;
+	}
+
+	.chat-dot {
+	  width: 8px;
+	  height: 8px;
+	  background-color: #fff;
+	  border-radius: 50%;
+	  position: absolute;
+	  top: 6px;
+	  left: 6px;
+	}
+
+	.chat-dot:nth-child(2) {
+	  left: 50%;
+	  transform: translateX(-50%);
+	}
+
+	.chat-dot:nth-child(3) {
+	  right: 6px;
+	  left: auto;
+	}
+
+	.chat-text {
+	  font-size: 14px;
+	  font-weight: bold;
+	}
+
+	.chat-box {
+	  position: fixed;
+	  bottom: 100px;
+	  right: 20px;
+	  width: 300px;
+	  height: 400px;
+	  background-color: #fff;
+	  border-radius: 5px;
+	  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	  overflow: hidden;
+	  transition: height 1s ease;
+	  display: none;
+	  flex-direction: column;
+	  justify-content: space-between;
+	  z-index: 9999;
+	}
+	
+	.loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-    }
-
-    /* Controls */
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      background-color: #f2f2f2;
-    }
-
-    /* Participants List */
-    .participants-list {
-      display: flex;
-      flex-wrap: wrap;
+      height: 100%;
+      background-color: rgba(0 0 0 0.5);
+      display: none;
       justify-content: center;
       align-items: center;
-      padding: 16px;
-      background-color: #f2f2f2;
+      z-index: 9999;
     }
-
-    /* Participant Item */
-    .participant-item {
-      display: flex;
-      align-items: center;
-      margin: 8px;
-    }
-
-    /* Participant Avatar */
-    .participant-avatar {
-      width: 40px;
-      height: 40px;
+	
+	.loading-spinner {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #3498db;
       border-radius: 50%;
-      background-color: #ccc;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
     }
-
-    /* Participant Name */
-    .participant-name {
-      margin-left: 8px;
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-	@media (max-width: 767px) {
-  #div-chat {
-    max-height: 50vh;
-    overflow-y: auto;
-  }
-}
-		 </style>
-    </head>
-    <body>
-		<div id="div-chat">
-            <h3 id="my-peer" style="display:none;"></h3>
-			<!--
-            <br /><br />
-            <video id="remoteStream" width="300" controls></video>
-			-->
-            <input type="text" id="remoteId" placeholder="Remote ID" style="display:none;">
-            <button id="btnCall" style="display:none;">Call</button>
-			
-			<div class="chat-button" onclick="toggleChat()">
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="loading-overlay">Connecting socket...
+		<div class="loading-spinner"></div>
+	</div>
+    <div class="row" id="div-chat">
+	
+		<div class="chat-button" onclick="toggleChat()">
 			  <div class="chat-icon">
 				<span class="chat-dot"></span>
 				<span class="chat-dot"></span>
@@ -213,25 +178,15 @@
 			  </div>
 			  <span class="chat-text">Chat</span>
 			</div>
-			<div class="chat-box" id="chatBox">
-			  <ul id="messages"></ul>
-					<form id="chat-form">
-					  <input id="chat-input" autocomplete="off" /><button id="send_msg">Send</button>
-					</form>
-			</div>
-			
-		<div class="container">
-			<div class="video-call-box">
-			  <div class="video-container" id="remote_video">
-					<video class="video-frame" id="localStream" autoplay></video>
-			  </div>
-			  <div class="participants-list" id="ulUser">
-			  </div>
-			</div>
+		<div class="chat-box" id="chatBox">
+			<ul id="messages"></ul>
+				<form id="chat-form">
+				<input id="chat-input" autocomplete="off" /><button id="send_msg">Send</button>
+			</form>
 		</div>
-			
-        </div>
-		<div id="div-dang-ky">
+    </div>
+	
+	<div id="div-dang-ky">
 		  <div class="container">
 			<div class="row justify-content-center">
 			  <div class="col-md-6">
@@ -246,9 +201,17 @@
 			  </div>
 			</div>
 		  </div>
-		</div>
-        
+	</div>
+  </div>
 
-    </body>
-    <script src="main.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="socket.io.js"></script>
+  <script src="main.js"></script>
+  
+  <script>
+    // Thêm mã JavaScript của bạn ở đây để xử lý video call và chat
+	
+  </script>
+</body>
 </html>
