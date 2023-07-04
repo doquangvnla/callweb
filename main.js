@@ -13,7 +13,7 @@ peer.on('open', function(id) {
 	peridlocal = id;
 	const username1 = $('#txtUsername').val();
 	//them video local
-	$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px;" id="div${id}">
+	$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px; height: 50%" id="div${id}">
 									<h2>Local</h2>
 									<video id="${id}" playsinline autoplay muted></video>
 									<div class="control-buttons">
@@ -108,7 +108,7 @@ function checkAdmin(ten, peerId){
 	//neu la admin
 	if (checkadmin === "admin"){
 	//them video cho nguoi moi
-		$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px;" id="div${peerId}">
+		$('#div-chat').append(`<div class="col-md-6" style="border: 2px solid #333; padding: 10px; margin-bottom: 5px; height: 50%" id="div${peerId}">
 									<h2>${ten}</h2>
 									<video id="${peerId}" playsinline autoplay></video>
 									<div class="control-buttons">
