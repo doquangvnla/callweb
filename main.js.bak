@@ -265,7 +265,7 @@ socket.on('offaudio', (peerid) => {
 	var audioElements = document.getElementsByTagName("audio");
     for (var i = 0; i < audioElements.length; i++) {
         if (peerid !== audioElements[i].id){
-			offmic(audioElements[i].id);
+			document.getElementById(audioElements[i].id).pause();
 		}
     }
 });
@@ -273,7 +273,7 @@ socket.on('onaudio', (peerid) => {
 	var audioElements = document.getElementsByTagName("audio");
     for (var i = 0; i < audioElements.length; i++) {
         if (peerid !== audioElements[i].id){
-			onmic(audioElements[i].id);
+			document.getElementById(audioElements[i].id).play();
 		}
     }
 });
