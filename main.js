@@ -9,7 +9,18 @@ var peer = new Peer();
 
 peer.on('open', function(id) {
 	$('#my-peer').append(id);
-	
+	const username1 = $('#txtUsername').val();
+	//them video local
+	$('#remote_video').append(`<div class="audio-controls" id="audio${id}">
+													<video class="video-frame" id="${id}" playsinline autoplay muted></video>
+													<div class="control-buttons">
+														<button class="mute-audio-button" id="voice${id}">
+														Tắt âm thanh</button>
+														<button class="mute-microphone-button" id="mic${id}">Tắt micro</button>
+													</div>
+												</div>`);
+	openStream()
+	.then(stream => playStream(id, stream));
 	
 	$('#btnSignUp').click(() => {
 		const username = $('#txtUsername').val();
@@ -41,7 +52,7 @@ socket.on('DANH_SACH', arrUser =>{
 	console.log(arrUser);
 	arrUser.forEach(user => {
 	     const { ten, peerId } = user;
-            $('#ulUser').append(`<div class="participant-item" id="${peerId}">
+            $('#ulUser').append(`<div class="participant-item" id="par${peerId}">
               <div class="participant-avatar"></div>
               <div class="participant-name">${ten}</div>
             </div>`);
@@ -50,45 +61,54 @@ socket.on('DANH_SACH', arrUser =>{
     		var id = $('#my-peer').html();
     		if(id != peerId){
 				
-    		//neu la admin
-			if (checkadmin === "admin"){
-			//them video cho nguoi moi
-				$('#remote_video').append(`<div class="audio-controls">
-													<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>
-													<div class="control-buttons">
-														<button class="mute-audio-button">
-														<span class="button-label">${ten}</span>
-														Tắt âm thanh</button>
-														<button class="mute-microphone-button">Tắt micro</button>
-													</div>
-												</div>`);
-			}else{
-				$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>`);
-			}
+				//neu la admin
+				if (checkadmin === "admin"){
+				//them video cho nguoi moi
+					$('#remote_video').append(`<div class="audio-controls" id="audio${peerId}">
+														<video class="video-frame" id="${peerId}" playsinline autoplay></video>
+														<div class="text-overlay">${ten}</div>
+														<div class="control-buttons">
+															<button class="mute-audio-button" id="voice${peerId}">
+															Tắt âm thanh</button>
+															<button class="mute-microphone-button" id="mic${peerId}">Tắt micro</button>
+														</div>
+													</div>`);
+				}else{
+					$('#remote_video').append(`<video class="video-frame" id="${peerId}" playsinline autoplay></video>`);
+					
+				}
+				//play video
+				//goi voi nguoi moi vao
+				str
+					.then(stream => {
+						//playStream('localStream', stream);
+						const call = peer.call(peerId, stream);
+						call.on('stream', remoteStream => playStream(peerId, remoteStream));
+					});
     		}
     });
 	
 	socket.on('CO_NGUOI', user =>{
 		console.log(user);
 		const { ten, peerId } = user;
-		$('#ulUser').append(`<div class="participant-item" id="${peerId}">
+		$('#ulUser').append(`<div class="participant-item" id="par${peerId}">
           <div class="participant-avatar"></div>
           <div class="participant-name">${ten}</div>
         </div>`);
 		//neu la admin
 		if (checkadmin === "admin"){
 		//them video cho nguoi moi
-			$('#remote_video').append(`<div class="audio-controls">
-												<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>
+			$('#remote_video').append(`<div class="audio-controls" id="audio${peerId}">
+												<video class="video-frame" id="${peerId}" playsinline autoplay></video>
+												<div class="text-overlay">${ten}</div>
 												<div class="control-buttons">
-													<button class="mute-audio-button">
-													<span class="button-label">${ten}</span>
+													<button class="mute-audio-button" id="voice${peerId}">
 													Tắt âm thanh</button>
-													<button class="mute-microphone-button">Tắt micro</button>
+													<button class="mute-microphone-button" id="mic${peerId}">Tắt micro</button>
 												</div>
 											</div>`);
 		}else{
-			$('#remote_video').append(`<video class="video-frame" id="remoteStream${peerId}" playsinline autoplay></video>`);
+			$('#remote_video').append(`<video class="video-frame" id="${peerId}" playsinline autoplay></video>`);
 		}
 		
 		
@@ -96,16 +116,17 @@ socket.on('DANH_SACH', arrUser =>{
 		
         str
     		.then(stream => {
-    		    playStream('localStream', stream);
+    		    //playStream('localStream', stream);
     			const call = peer.call(peerId, stream);
-    			call.on('stream', remoteStream => playStream('remoteStream'+peerId, remoteStream));
+    			call.on('stream', remoteStream => playStream(peerId, remoteStream));
     		});
 	
 	});	
 		
 	socket.on('AI_DO_NGAT_KET_NOI', peerId => {
-        $(`#${peerId}`).remove();
-		$(`#remoteStream${peerId}`).remove();
+        $(`#par${peerId}`).remove();
+		$(`#${peerId}`).remove();
+		$(`#audio${peerId}`).remove();
     });
 	
 });
@@ -143,9 +164,9 @@ function openStream() {
 
 function playStream(idVideoTag, stream) {
     const video = document.getElementById(idVideoTag);
-	if(idVideoTag == 'localStream'){
-		video.muted = true;
-	}
+	//if(idVideoTag == 'localStream'){
+	//	video.muted = true;
+	//}
 	if(video != undefined && video.srcObject == null){
 	    video.srcObject = stream;
         //video.play();
@@ -155,8 +176,8 @@ function playStream(idVideoTag, stream) {
     
 }
 
-openStream()
-.then(stream => playStream('localStream', stream));
+//openStream()
+//.then(stream => playStream('localStream', stream));
 
 
   

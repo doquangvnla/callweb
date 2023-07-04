@@ -24,6 +24,17 @@
 			.audio-controls {
 			  position: relative;
 			}
+			
+			.text-overlay {
+			  position: absolute;
+			  top: 0;
+			  left: 0;
+			  padding: 10px;
+			  color: white;
+			  font-size: 20px;
+			  background-color: rgba(0, 0, 0, 0.5);
+			  z-index: 2;
+			}
 
 			.control-buttons {
 			  position: absolute;
@@ -143,11 +154,13 @@
       grid-template-columns: repeat(2, 1fr);
       grid-gap: 5px;
       padding: 5px;
+	  position: relative;
     }
 
     /* Video Frame */
     .video-frame {
       width: 100%;
+	  z-index: 1;
     }
 
     /* Controls */
@@ -224,7 +237,7 @@
 		<div class="container">
 			<div class="video-call-box">
 			  <div class="video-container" id="remote_video">
-					<video class="video-frame" id="localStream" muted autoplay></video>
+					<!--<video class="video-frame" id="localStream" muted autoplay></video>-->
 			  </div>
 			  <div class="participants-list" id="ulUser">
 			  </div>
