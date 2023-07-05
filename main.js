@@ -286,18 +286,22 @@ socket.on('onvoice', (peerid) => {
 });
 
 socket.on('offaudio', (peerid) => {
-	var audioElements = document.getElementsByTagName("audio");
-    for (var i = 0; i < audioElements.length; i++) {
-        if (peerid !== audioElements[i].id){
-			document.getElementById(audioElements[i].id).pause();
+	if(peerid === peridlocal){
+		var audioElements = document.getElementsByTagName("audio");
+		for (var i = 0; i < audioElements.length; i++) {
+			if (peerid !== audioElements[i].id){
+				document.getElementById(audioElements[i].id).pause();
+			}
 		}
-    }
+	}
 });
 socket.on('onaudio', (peerid) => {
-	var audioElements = document.getElementsByTagName("audio");
-    for (var i = 0; i < audioElements.length; i++) {
-        if (peerid !== audioElements[i].id){
-			document.getElementById(audioElements[i].id).play();
+	if(peerid === peridlocal){
+		var audioElements = document.getElementsByTagName("audio");
+		for (var i = 0; i < audioElements.length; i++) {
+			if (peerid !== audioElements[i].id){
+				document.getElementById(audioElements[i].id).play();
+			}
 		}
-    }
+	}
 });
